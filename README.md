@@ -86,7 +86,7 @@ Per-repo overrides. Run `/claude-supermemory:project-config` or create manually:
 | Option                 | Description                 |
 | ---------------------- | --------------------------- |
 | `apiKey`               | Project-specific API key    |
-| `baseUrl`              | Project-specific API URL    |
+| `baseUrl`              | Supermemory API URL    |
 | `personalContainerTag` | Override personal container |
 | `repoContainerTag`     | Override team container tag |
 
