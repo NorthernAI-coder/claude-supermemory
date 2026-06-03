@@ -2,7 +2,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const { execFile } = require('node:child_process');
+const { openUrl } = require('./open-url');
 
 const authSuccessHtml = require('../templates/auth-success.html');
 const authErrorHtml = require('../templates/auth-error.html');
@@ -48,19 +48,6 @@ function clearCredentials() {
   } catch {}
 }
 
-function openBrowser(url) {
-  const onError = (err) => {
-    if (err) console.warn('Failed to open browser:', err.message);
-  };
-  if (process.platform === 'win32') {
-    execFile('explorer.exe', [url], onError);
-  } else if (process.platform === 'darwin') {
-    execFile('open', [url], onError);
-  } else {
-    execFile('xdg-open', [url], onError);
-  }
-}
-
 function startAuthFlow() {
   return new Promise((resolve, reject) => {
     let resolved = false;
@@ -92,7 +79,12 @@ function startAuthFlow() {
     server.listen(AUTH_PORT, '127.0.0.1', () => {
       const callbackUrl = `http://localhost:${AUTH_PORT}/callback`;
       const authUrl = `${AUTH_BASE_URL}?callback=${encodeURIComponent(callbackUrl)}&client=claude_code`;
-      openBrowser(authUrl);
+      openUrl(authUrl).catch((error) => {
+        if (!resolved) {
+          server.close();
+          reject(new Error(`Failed to open browser: ${error.message}`));
+        }
+      });
     });
 
     server.on('error', (err) => {
