@@ -39,6 +39,7 @@ export SUPERMEMORY_CC_API_KEY="sm_..."
 | `/claude-supermemory:project-config` | Configure project-level settings         |
 | `/claude-supermemory:logout`         | Clear saved credentials                  |
 | `/claude-supermemory:session`        | Show clickable URL for the current session document in Supermemory |
+| `/claude-supermemory:status`         | Show authentication status |
 
 ## Configuration
 
