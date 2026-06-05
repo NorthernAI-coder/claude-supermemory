@@ -13,6 +13,7 @@ const hooks = [
   'search-memory',
   'add-memory',
   'save-project-memory',
+  'status',
 ];
 
 async function build() {
