@@ -20,6 +20,19 @@ Your agent remembers what you worked on - across sessions, across projects.
 /plugin install supermemory
 ```
 
+> **Already have the old `claude-supermemory` plugin installed?** It was renamed to `supermemory`, so it won't update in place. Migrate with:
+>
+> ```bash
+> /plugin marketplace update supermemory-plugins
+> /plugin install supermemory@supermemory-plugins
+> ```
+>
+> Then, **only if you still have the old plugin**, remove it:
+>
+> ```bash
+> /plugin uninstall claude-supermemory@supermemory-plugins
+> ```
+
 Set your API key (get one at [app.supermemory.ai](https://app.supermemory.ai)):
 
 ```bash
