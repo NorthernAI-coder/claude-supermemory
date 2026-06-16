@@ -1,15 +1,16 @@
 {
   "name": "supermemory-plugins",
+  "description": "Supermemory plugins for Claude Code — persistent memory across sessions and projects",
   "owner": {
     "name": "Supermemory",
     "email": "support@supermemory.ai"
   },
   "plugins": [
     {
-      "name": "claude-supermemory",
+      "name": "supermemory",
       "source": "./plugin",
       "description": "Persistent memory across Claude Code sessions using Supermemory",
-      "version": "0.0.5",
+      "category": "productivity",
       "author": {
         "name": "Supermemory"
       }

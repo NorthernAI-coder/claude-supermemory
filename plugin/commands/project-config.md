@@ -18,6 +18,7 @@ Update project-level config stored in `.claude/.supermemory-claude/config.json`.
 
 2. Ask the user what they want to update using AskUserQuestion:
    - **API Key** (`apiKey`): Project-level API key that overrides global
+   - **Base URL** (`baseUrl`): Supermemory API base URL, defaults to `https://api.supermemory.ai`
    - **Personal Container Tag** (`personalContainerTag`): Used for saving and searching personal memories across sessions
    - **Repo Container Tag** (`repoContainerTag`): Used for repo-level memories shared across team
 
@@ -43,6 +44,6 @@ Update project-level config stored in `.claude/.supermemory-claude/config.json`.
    "
    ```
 
-   Replace `KEY_NAME` with `apiKey`, `personalContainerTag`, or `repoContainerTag` and `NEW_VALUE` with the user's provided value.
+   Replace `KEY_NAME` with `apiKey`, `baseUrl`, `personalContainerTag`, or `repoContainerTag` and `NEW_VALUE` with the user's provided value.
 
 5. Confirm to the user the project configuration has been updated.

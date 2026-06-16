@@ -3,6 +3,7 @@ const path = require('node:path');
 const os = require('node:os');
 const { loadCredentials } = require('./auth');
 const { loadProjectConfig } = require('./project-config');
+const { BASE_URL } = require('./constants');
 
 const SETTINGS_DIR = path.join(os.homedir(), '.supermemory-claude');
 const SETTINGS_FILE = path.join(SETTINGS_DIR, 'settings.json');
@@ -68,18 +69,42 @@ function saveSettings(settings) {
   fs.writeFileSync(SETTINGS_FILE, JSON.stringify(toSave, null, 2));
 }
 
-function getApiKey(settings, cwd) {
+function getApiKey(settings, cwd, projectConfig) {
   if (settings.apiKey) return settings.apiKey;
   if (process.env.SUPERMEMORY_CC_API_KEY)
     return process.env.SUPERMEMORY_CC_API_KEY;
 
-  const projectConfig = loadProjectConfig(cwd || process.cwd());
+  projectConfig = projectConfig || loadProjectConfig(cwd || process.cwd());
   if (projectConfig?.apiKey) return projectConfig.apiKey;
 
   const credentials = loadCredentials();
   if (credentials?.apiKey) return credentials.apiKey;
 
   throw new Error('NO_API_KEY');
+}
+
+function normalizeBaseUrl(baseUrl) {
+  if (typeof baseUrl !== 'string' || !baseUrl.trim()) return null;
+
+  const trimmed = baseUrl.trim();
+  try {
+    const url = new URL(trimmed);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return trimmed;
+  } catch {
+    return null;
+  }
+}
+
+function getBaseUrl(cwd, projectConfig) {
+  projectConfig = projectConfig || loadProjectConfig(cwd || process.cwd());
+  const configured =
+    process.env.SUPERMEMORY_API_URL || projectConfig?.baseUrl || BASE_URL;
+  const normalized = normalizeBaseUrl(configured);
+  if (!normalized) {
+    throw new Error('Invalid baseUrl: expected an absolute http(s) URL');
+  }
+  return normalized;
 }
 
 function debugLog(settings, message, data) {
@@ -153,6 +178,7 @@ module.exports = {
   loadSettings,
   saveSettings,
   getApiKey,
+  getBaseUrl,
   debugLog,
   getIncludeTools,
   shouldIncludeTool,

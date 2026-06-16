@@ -4,7 +4,8 @@ const {
   getContainerTag,
   getRepoContainerTag,
 } = require('./lib/container-tag');
-const { loadSettings, getApiKey } = require('./lib/settings');
+const { loadProjectConfig } = require('./lib/project-config');
+const { loadSettings, getApiKey, getBaseUrl } = require('./lib/settings');
 const { formatSearchResults } = require('./lib/format-context');
 const { getUserFriendlyError } = require('./lib/error-helpers');
 
@@ -38,10 +39,12 @@ async function main() {
   }
 
   const settings = loadSettings();
+  const cwd = process.cwd();
+  const projectConfig = loadProjectConfig(cwd);
 
   let apiKey;
   try {
-    apiKey = getApiKey(settings);
+    apiKey = getApiKey(settings, cwd, projectConfig);
   } catch {
     console.log('Supermemory API key not configured.');
     console.log(
@@ -51,13 +54,13 @@ async function main() {
     return;
   }
 
-  const cwd = process.cwd();
   const projectName = getProjectName(cwd);
   const personalTag = getContainerTag(cwd);
   const repoTag = getRepoContainerTag(cwd);
 
   try {
-    const client = new SupermemoryClient(apiKey, personalTag);
+    const baseUrl = getBaseUrl(cwd, projectConfig);
+    const client = new SupermemoryClient(apiKey, personalTag, { baseUrl });
 
     console.log(`Project: ${projectName}\n`);
 

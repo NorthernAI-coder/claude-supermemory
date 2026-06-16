@@ -4,9 +4,9 @@ const {
   validateApiKeyFormat,
   validateContainerTag,
 } = require('./validate.js');
+const { BASE_URL } = require('./constants');
 
 const DEFAULT_PROJECT_ID = 'claudecode_default';
-const API_URL = process.env.SUPERMEMORY_API_URL || 'https://api.supermemory.ai';
 
 function dedupe(items, getKey = (x) => x) {
   const seen = new Set();
@@ -58,7 +58,7 @@ EXAMPLES:
 | "To add a new API route..." | "Adding API routes: [steps]" |`;
 
 class SupermemoryClient {
-  constructor(apiKey, containerTag) {
+  constructor(apiKey, containerTag, options = {}) {
     if (!apiKey) throw new Error('SUPERMEMORY_CC_API_KEY is required');
 
     const keyCheck = validateApiKeyFormat(apiKey);
@@ -76,7 +76,7 @@ class SupermemoryClient {
 
     this.client = new Supermemory({
       apiKey,
-      baseURL: API_URL,
+      baseURL: options.baseUrl || BASE_URL,
       defaultHeaders: { ...integrityHeaders, 'x-sm-source': 'claude-code' },
     });
     this.containerTag = tag;

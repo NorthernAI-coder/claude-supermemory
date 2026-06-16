@@ -3,7 +3,8 @@ const {
   PERSONAL_ENTITY_CONTEXT,
 } = require('./lib/supermemory-client');
 const { getContainerTag, getProjectName } = require('./lib/container-tag');
-const { loadSettings, getApiKey } = require('./lib/settings');
+const { loadProjectConfig } = require('./lib/project-config');
+const { loadSettings, getApiKey, getBaseUrl } = require('./lib/settings');
 const { getUserFriendlyError } = require('./lib/error-helpers');
 
 async function main() {
@@ -17,22 +18,24 @@ async function main() {
   }
 
   const settings = loadSettings();
+  const cwd = process.cwd();
+  const projectConfig = loadProjectConfig(cwd);
 
   let apiKey;
   try {
-    apiKey = getApiKey(settings);
+    apiKey = getApiKey(settings, cwd, projectConfig);
   } catch {
     console.log('Supermemory API key not configured.');
     console.log('Set SUPERMEMORY_CC_API_KEY environment variable.');
     return;
   }
 
-  const cwd = process.cwd();
   const containerTag = getContainerTag(cwd);
   const projectName = getProjectName(cwd);
 
   try {
-    const client = new SupermemoryClient(apiKey, containerTag);
+    const baseUrl = getBaseUrl(cwd, projectConfig);
+    const client = new SupermemoryClient(apiKey, containerTag, { baseUrl });
     const result = await client.addMemory(
       content,
       containerTag,

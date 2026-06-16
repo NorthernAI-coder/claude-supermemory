@@ -15,10 +15,25 @@ Your agent remembers what you worked on - across sessions, across projects.
 
 ## Installation
 
+> **Requires Node.js 18+** on your PATH — the memory hooks run as Node scripts.
+
 ```bash
 /plugin marketplace add supermemoryai/claude-supermemory
-/plugin install claude-supermemory
+/plugin install supermemory
 ```
+
+> **Already have the old `claude-supermemory` plugin installed?** It was renamed to `supermemory`, so it won't update in place. Migrate with:
+>
+> ```bash
+> /plugin marketplace update supermemory-plugins
+> /plugin install supermemory@supermemory-plugins
+> ```
+>
+> Then, **only if you still have the old plugin**, remove it:
+>
+> ```bash
+> /plugin uninstall claude-supermemory@supermemory-plugins
+> ```
 
 Set your API key (get one at [app.supermemory.ai](https://app.supermemory.ai)):
 
@@ -36,11 +51,11 @@ export SUPERMEMORY_CC_API_KEY="sm_..."
 
 | Command                              | Description                              |
 | ------------------------------------ | ---------------------------------------- |
-| `/claude-supermemory:index`          | Index codebase architecture and patterns |
-| `/claude-supermemory:project-config` | Configure project-level settings         |
-| `/claude-supermemory:logout`         | Clear saved credentials                  |
-| `/claude-supermemory:session`        | Show clickable URL for the current session document in Supermemory |
-| `/claude-supermemory:status`         | Show authentication status |
+| `/supermemory:index`          | Index codebase architecture and patterns |
+| `/supermemory:project-config` | Configure project-level settings         |
+| `/supermemory:logout`         | Clear saved credentials                  |
+| `/supermemory:session`        | Show clickable URL for the current session document in Supermemory |
+| `/supermemory:status`         | Show authentication status |
 
 ## Configuration
 
@@ -74,11 +89,12 @@ SUPERMEMORY_DEBUG=true           # Optional: enable debug logging
 
 **Project Config** — `.claude/.supermemory-claude/config.json`
 
-Per-repo overrides. Run `/claude-supermemory:project-config` or create manually:
+Per-repo overrides. Run `/supermemory:project-config` or create manually:
 
 ```json
 {
   "apiKey": "sm_...",
+  "baseUrl": "https://api.supermemory.ai",
   "repoContainerTag": "my-team-project",
   "signalExtraction": true
 }
@@ -87,6 +103,7 @@ Per-repo overrides. Run `/claude-supermemory:project-config` or create manually:
 | Option                 | Description                 |
 | ---------------------- | --------------------------- |
 | `apiKey`               | Project-specific API key    |
+| `baseUrl`              | Supermemory API URL    |
 | `personalContainerTag` | Override personal container |
 | `repoContainerTag`     | Override team container tag |
 

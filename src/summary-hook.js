@@ -3,9 +3,11 @@ const {
   PERSONAL_ENTITY_CONTEXT,
 } = require('./lib/supermemory-client');
 const { getContainerTag, getProjectName } = require('./lib/container-tag');
+const { loadProjectConfig } = require('./lib/project-config');
 const {
   loadSettings,
   getApiKey,
+  getBaseUrl,
   debugLog,
   getSignalConfig,
 } = require('./lib/settings');
@@ -25,6 +27,7 @@ async function main() {
     const cwd = input.cwd || process.cwd();
     const sessionId = input.session_id;
     const transcriptPath = input.transcript_path;
+    const projectConfig = loadProjectConfig(cwd);
 
     debugLog(settings, 'Stop', { sessionId, transcriptPath });
 
@@ -36,7 +39,7 @@ async function main() {
 
     let apiKey;
     try {
-      apiKey = getApiKey(settings);
+      apiKey = getApiKey(settings, cwd, projectConfig);
     } catch {
       writeOutput({ continue: true });
       return;
@@ -63,7 +66,8 @@ async function main() {
       return;
     }
 
-    const client = new SupermemoryClient(apiKey);
+    const baseUrl = getBaseUrl(cwd, projectConfig);
+    const client = new SupermemoryClient(apiKey, undefined, { baseUrl });
     const containerTag = getContainerTag(cwd);
     const projectName = getProjectName(cwd);
 
