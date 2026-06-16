@@ -9,8 +9,6 @@ const OUT = path.join(ROOT, 'plugin', 'scripts');
 
 const hooks = [
   'context-hook',
-  'recall-hook',
-  'recall-approve',
   'summary-hook',
   'search-memory',
   'add-memory',
